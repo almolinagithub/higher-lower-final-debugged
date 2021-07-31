@@ -1,93 +1,62 @@
-from game_data import data
+import art
+import game_data
 import random
-from art import logo, vs
-from replit import clear
-
-def get_random_account():
-  """Get data from random account"""
-  return random.choice(data)
-
-def format_data(account):
-  """Format account into printable format: name, description and country"""
-  name = account["name"]
-  description = account["description"]
-  country = account["country"]
-  # print(f'{name}: {account["follower_count"]}')
-  return f"{name}, a {description}, from {country}"
-
-def check_answer(guess, a_followers, b_followers):
-  """Checks followers against user's guess 
-  and returns True if they got it right.
-  Or False if they got it wrong."""
-
-  if a_followers > b_followers:
-    return guess == "a"
-  else:
-    return guess == "b"
+#present the art
+# present compare A
+still_in_game = True
+points = 0
 
 
-def game():
-  print(logo)
-  score = 0
-  game_should_continue = True
-  account_a = get_random_account()
-  account_b = get_random_account()
 
-  while game_should_continue:
-    account_a = account_b
-    account_b = get_random_account()
+def right_answer():
+    if int(followers_a) > int(followers_b):
+        answer = "a"
+    elif int(followers_a) < int(followers_b):
+        answer = "b"
+    return answer
 
-    #Solution to debugging challenge:
-    # You can change the if check to a while check.
-    # This way you can get a new random account until 
-    #account_a is no longer equal to account_b
-    #old code:
-    # if account_a == account_b:
-    #   account_b = get_random_account()
-    #new code:
-    while account_a == account_b:
-      account_b = get_random_account
+def check_answer(answer,player_guess):
+    return answer ==  player_guess
 
 
-    print(f"Compare A: {format_data(account_a)}.")
-    print(vs)
-    print(f"Against B: {format_data(account_b)}.")
-    
-    guess = input("Who has more followers? Type 'A' or 'B': ").lower()
-    a_follower_count = account_a["follower_count"]
-    b_follower_count = account_b["follower_count"]
-    is_correct = check_answer(guess, a_follower_count, b_follower_count)
 
-    clear()
-    print(logo)
-    if is_correct:
-      score += 1
-      print(f"You're right! Current score: {score}.")
+def get_random_vip():
+    vip_random = game_data.data[random.randint(0,50)]
+    data_no_followers = str(vip_random['name']+ ', '+ vip_random['description']+', '+ vip_random['country'])
+    followers = str(vip_random['follower_count'])
+    position = game_data.data.index(vip_random)
+    return data_no_followers, followers,position
+
+session_vip_b = get_random_vip()
+
+
+while still_in_game:
+    session_vip_a = session_vip_b
+    session_vip_b = get_random_vip()
+    if session_vip_a == session_vip_b:
+        session_vip_b = get_random_vip()
+
+    public_info_a = session_vip_a[0]
+    public_info_b = session_vip_b[0]
+
+    followers_a = session_vip_a[1]
+    followers_b = session_vip_b[1]
+
+    print(art.logo)
+
+    print(f"Compare A: {public_info_a}")
+    print(f"psssst he/she has {followers_a} followers")
+    print(art.vs)
+    print(f"Against B: {public_info_b}")
+    print(f"psssst he/she has {followers_b} followers")
+
+    player_guess = input("Who has more followers? (a/b) ")
+
+    answer = right_answer()
+    if check_answer(answer,player_guess):
+        print("Right")
+        points += 1
+        print(points)
     else:
-      game_should_continue = False
-      print(f"Sorry, that's wrong. Final score: {score}")
-
-game()
-
-
-# Generate a random account from the game data.
-
-# Format account data into printable format.
-
-# Ask user for a guess.
-
-# Check if user is correct.
-## Get follower count.
-## If Statement
-
-# Feedback.
-
-# Score Keeping.
-
-# Make game repeatable.
-
-# Make B become the next A.
-
-# Add art.
-
-# Clear screen between rounds.
+        print("Wrong")
+        still_in_game = False
