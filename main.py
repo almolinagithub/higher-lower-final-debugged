@@ -1,62 +1,68 @@
-import art
-import game_data
+
 import random
-#present the art
-# present compare A
+import art
+import  game_data
+
 still_in_game = True
 points = 0
 
+print("Welcome to the higher lower bla bla bla, the rules are the same..go!")
 
+def vip():
+    vip = random.choice(game_data.data)
+    return vip
 
-def right_answer():
-    if int(followers_a) > int(followers_b):
-        answer = "a"
-    elif int(followers_a) < int(followers_b):
-        answer = "b"
-    return answer
+def format_string(vip):
+    vip_string = str(vip["name"] +","+ vip["description"] +","+ vip["country"])
+    return vip_string
 
-def check_answer(answer,player_guess):
-    return answer ==  player_guess
+def check_answer(answer,followers_a,followers_b):
+    if followers_vip_a > followers_vip_b:
+        if answer == "a":
+#            points += 1
+    #        print(points)
+            return True
+        else:
+            print("Sbagliato")
+            still_in_game = False
+            return False
 
+    elif followers_vip_a < followers_vip_b:
+        if answer == "b":
+    #        points += 1
+            return True
+        else:
+            print("Sbagliato")
+            still_in_game = False
+            return False
 
+vip_b = vip()
 
-def get_random_vip():
-    vip_random = game_data.data[random.randint(0,50)]
-    data_no_followers = str(vip_random['name']+ ', '+ vip_random['description']+', '+ vip_random['country'])
-    followers = str(vip_random['follower_count'])
-    position = game_data.data.index(vip_random)
-    return data_no_followers, followers,position
-
-session_vip_b = get_random_vip()
 
 
 while still_in_game:
-    session_vip_a = session_vip_b
-    session_vip_b = get_random_vip()
-    if session_vip_a == session_vip_b:
-        session_vip_b = get_random_vip()
 
-    public_info_a = session_vip_a[0]
-    public_info_b = session_vip_b[0]
+    vip_a = vip_b
+    vip_b = vip()
 
-    followers_a = session_vip_a[1]
-    followers_b = session_vip_b[1]
+    vip_a_data = format_string(vip_a)
+    vip_b_data = format_string(vip_b)
 
-    print(art.logo)
+    followers_vip_a = vip_a["follower_count"]
+    followers_vip_b = vip_b["follower_count"]
 
-    print(f"Compare A: {public_info_a}")
-    print(f"psssst he/she has {followers_a} followers")
+
+    print(f"Compare VIP A :{vip_a_data} ..........psss: they F are {followers_vip_a}")
+
     print(art.vs)
-    print(f"Against B: {public_info_b}")
-    print(f"psssst he/she has {followers_b} followers")
 
-    player_guess = input("Who has more followers? (a/b) ")
+    print(f"with VIP B :{vip_b_data} .........psss: they F are {followers_vip_b}")
 
-    answer = right_answer()
-    if check_answer(answer,player_guess):
-        print("Right")
+    answer = input("who has more followers?  (a/b) ")
+
+    if not check_answer(answer,followers_vip_a,followers_vip_b):
+        still_in_game = False
+    else:
         points += 1
         print(points)
-    else:
-        print("Wrong")
-        still_in_game = False
+
